@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 21/03/2022 15:12:25
+ Date: 23/03/2022 19:26:14
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `data_files`  (
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上传的时间',
   `year` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '年度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of data_files
@@ -38,6 +38,7 @@ INSERT INTO `data_files` VALUES (8, '上传的资料', 'upload\\LchhjpAtJxihD6CD
 INSERT INTO `data_files` VALUES (11, '测试用超长的名字啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊', 'upload\\Y4joq-tJd-AVU3l0Kjl_ff6t.docx', '2022-03-18 16:10:56', '2022');
 INSERT INTO `data_files` VALUES (7, '添加测试的文件', 'upload/002.xls', '2022-03-14 13:32:09', '2020');
 INSERT INTO `data_files` VALUES (13, '添加测试的文件', 'upload/002.xls', '2022-03-20 15:10:50', '2020');
+INSERT INTO `data_files` VALUES (14, '成绩表', 'upload\\lrayZztbkt8EQfx-cVSxmdRn.xls', '2022-03-21 15:24:40', '2022');
 
 -- ----------------------------
 -- Table structure for exam_type
@@ -82,28 +83,31 @@ INSERT INTO `expand` VALUES (1, 'upload\\Z_lYQkE6U7rqade-4CXDkhky.jpeg', 'https:
 DROP TABLE IF EXISTS `fund`;
 CREATE TABLE `fund`  (
   `students` int(11) NOT NULL DEFAULT 0 COMMENT '学生报名人数',
-  `student_price` decimal(10, 2) NOT NULL DEFAULT 300.00 COMMENT '学生报名费',
-  `registery_fee_total` decimal(11, 2) UNSIGNED NOT NULL COMMENT '汇款的金额',
+  `student_registration_fee` decimal(10, 2) NOT NULL DEFAULT 300.00 COMMENT '学生报名费',
+  `registration_fee_total` decimal(11, 2) UNSIGNED NOT NULL COMMENT '学生报名费总金额',
   `stub_img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '学校汇款给工信部的存根',
-  `teachers` int(11) NOT NULL DEFAULT 0 COMMENT '考务费份数',
-  `teacher_price` decimal(10, 2) NOT NULL DEFAULT 120.00 COMMENT '考务费',
-  `exam_fee_total` decimal(11, 2) NOT NULL COMMENT '考务费总数',
+  `teacher_fee` decimal(10, 2) NOT NULL DEFAULT 120.00 COMMENT '考务费',
+  `exam_fee_total` decimal(11, 2) NOT NULL COMMENT '考务费总数 = 学生报名人数 * 考务费',
   `invoice_img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '工信部发回的发票',
   `order_id` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单编号：开始时间+结束时间+随机数',
-  `active` int(11) NOT NULL COMMENT '0：学校报名未汇款\r\n1：学校汇款，工信部未汇款\r\n2：学校汇款，工信部汇款\r\n',
+  `active` int(11) NOT NULL COMMENT '0：学校已汇款，工信部未汇款\r\n1：工信部已汇款，财务未分配\r\n2：财务已发配\r\n',
   `edit_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '编辑时自动更新',
+  `other_fee` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '其他费用\r\n{\r\n name: \"费用名\",\r\n fee: \"费用金额\"\r\n}',
+  `teacher_info_list` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '老师信息\r\n{\r\n name: \"姓名\",\r\n fee: \"人均费用\",\r\n classroom: \"分配教室\"\r\n}',
   PRIMARY KEY (`order_id`) USING BTREE
 ) ENGINE = MyISAM CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of fund
 -- ----------------------------
-INSERT INTO `fund` VALUES (1, 300.00, 300.00, 'upload\\rIP8OLPz30423VVrSi9883Hn.jpeg', 1, 120.00, 120.00, 'upload\\9QwMJaG3X8OOk0mIQLwzHvSI.jpeg', '2022-01-15|2022-01-16', 2, '2022-01-16 00:44:13');
-INSERT INTO `fund` VALUES (1, 300.00, 300.00, NULL, 1, 120.00, 120.00, NULL, '2022-01-15|2022-01-14', 1, '2022-01-15 17:56:53');
-INSERT INTO `fund` VALUES (2, 300.00, 600.00, NULL, 0, 120.00, 0.00, NULL, '2022-01-14|2022-01-15', 1, '2022-01-15 17:57:04');
-INSERT INTO `fund` VALUES (10, 300.00, 3000.00, 'upload\\dR_8WnnjGeETxX2BRqKVMTBk.jpeg', 0, 120.00, 0.00, 'upload\\EuH68B85jdjAbHYCXqrTj20c.jpeg', '2022-01-04|2022-01-15|1642253166384', 2, '2022-01-16 00:42:26');
-INSERT INTO `fund` VALUES (12, 300.00, 3600.00, 'upload\\olQPZS4X2gor1QgnU_1-ohYo.jpeg', 2, 120.00, 240.00, 'upload\\ib1RYy98Wgl28JDGTYxEPKmt.jpeg', '2021-12-29|2022-01-06|1642411159180', 2, '2022-01-17 17:19:56');
-INSERT INTO `fund` VALUES (4, 300.00, 1200.00, NULL, 0, 120.00, 0.00, NULL, '2022-01-12|2022-01-13|1642411216159', 0, '2022-01-17 17:20:16');
+INSERT INTO `fund` VALUES (123, 300.00, 36900.00, NULL, 120.00, 14760.00, NULL, '2022-03-09|2022-04-14|1648022100367', 0, '2022-03-23 16:28:02', '[{\"name\":\"10\",\"fee\":\"10100\"},{\"name\":\"10\",\"fee\":\"120\"}]', '[{\"name\":\"123\",\"fee\":2270,\"classroom\":\"123\"},{\"name\":\"120\",\"fee\":2270,\"classroom\":\"120\"}]');
+INSERT INTO `fund` VALUES (1, 300.00, 300.00, NULL, 120.00, 120.00, NULL, '2022-01-15|2022-01-14', 1, '2022-01-15 17:56:53', NULL, '');
+INSERT INTO `fund` VALUES (2, 300.00, 600.00, NULL, 120.00, 0.00, NULL, '2022-01-14|2022-01-15', 1, '2022-01-15 17:57:04', NULL, '');
+INSERT INTO `fund` VALUES (10, 300.00, 3000.00, 'upload\\dR_8WnnjGeETxX2BRqKVMTBk.jpeg', 120.00, 0.00, 'upload\\EuH68B85jdjAbHYCXqrTj20c.jpeg', '2022-01-04|2022-01-15|1642253166384', 2, '2022-01-16 00:42:26', NULL, '');
+INSERT INTO `fund` VALUES (12, 300.00, 3600.00, 'upload\\olQPZS4X2gor1QgnU_1-ohYo.jpeg', 120.00, 240.00, 'upload\\ib1RYy98Wgl28JDGTYxEPKmt.jpeg', '2021-12-29|2022-01-06|1642411159180', 2, '2022-01-17 17:19:56', NULL, '');
+INSERT INTO `fund` VALUES (4, 300.00, 1200.00, NULL, 120.00, 0.00, NULL, '2022-01-12|2022-01-13|1642411216159', 0, '2022-01-17 17:20:16', NULL, '');
+INSERT INTO `fund` VALUES (32, 300.00, 9600.00, 'upload\\-LgfJ0NBtyTI2GYThAaHWXq4.jpeg', 120.00, 3840.00, 'upload\\mtK-PoX9vLnWhUKtWp_4NKre.jpeg', '2022-03-10|2022-04-07|1648020777600', 0, '2022-03-23 16:59:07', '[{\"name\":\"123\",\"fee\":\"0123\"},{\"name\":\"饮水费\",\"fee\":\"120\"}]', '[{\"name\":\"12\",\"fee\":1199,\"classroom\":\"123\"},{\"name\":\"123\",\"fee\":1199,\"classroom\":\"123\"},{\"name\":\"12\",\"fee\":1199,\"classroom\":\"12\"}]');
+INSERT INTO `fund` VALUES (9, 300.00, 2700.00, NULL, 120.00, 1080.00, NULL, '2022-03-01|2022-04-15|1648025122478', 0, '2022-03-23 16:45:22', '[]', '[]');
 
 -- ----------------------------
 -- Table structure for images
@@ -115,16 +119,14 @@ CREATE TABLE `images`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上传的时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '备注/图片名字',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of images
 -- ----------------------------
-INSERT INTO `images` VALUES (1, 'upload/0qjE7fggXAxYqyDuEsmw3ACJ.jpeg', '2022-03-14 19:01:54', '001');
-INSERT INTO `images` VALUES (10, 'upload\\8w714LAEeaFHckHp8PgFUM6g.jpg', '2022-03-21 15:08:08', 'test03');
-INSERT INTO `images` VALUES (8, 'upload\\L7OR60Hd--jeRYiH-OB1UzsJ.jpg', '2022-03-19 22:25:31', 'test');
-INSERT INTO `images` VALUES (5, 'upload/7nRC8-AvdJ6iEwLC4OZwn-ba.jpeg', '2022-03-14 19:03:47', '75');
-INSERT INTO `images` VALUES (6, 'upload\\5kaCxSpKJFquLVse0H7Xbd4m.jpg', '2022-03-14 19:56:24', 'test1');
+INSERT INTO `images` VALUES (13, 'upload\\bo-fJezMqb22lgKDst6YJBx2.jpg', '2022-03-21 15:25:11', '03');
+INSERT INTO `images` VALUES (11, 'upload\\tN0Px_h3tCdYtg6o9cAuFz-C.jpg', '2022-03-21 15:24:55', '01');
+INSERT INTO `images` VALUES (12, 'upload\\SKNARSHajBqhNEVgRQx0w2dr.jpg', '2022-03-21 15:25:03', '02');
 
 -- ----------------------------
 -- Table structure for menu
@@ -136,7 +138,7 @@ CREATE TABLE `menu`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `specialty` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '专业',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -160,12 +162,13 @@ CREATE TABLE `news`  (
   `student_no` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '对应前台的账号',
   `status` int(2) NOT NULL COMMENT '0,1成功，失败 --->拓展可能需要',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of news
 -- ----------------------------
 INSERT INTO `news` VALUES (5, '1906030243', 0);
+INSERT INTO `news` VALUES (11, '1902131543', 0);
 
 -- ----------------------------
 -- Table structure for score
@@ -184,26 +187,25 @@ CREATE TABLE `score`  (
   `s_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '唯一索引',
   `registration_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`s_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 50 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of score
 -- ----------------------------
-INSERT INTO `score` VALUES ('1902131543', 'test1', '计算机应用技术', '2019', 'A', 'web前端开发', '初级', 65, 87, 29, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131544', 'test2', '计算机应用技术', '2018', 'A', 'web前端开发', '初级', 45, 65, 30, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131545', 'test3', '计算机应用技术', '2020', 'A', 'web前端开发', '中级', 75, 65, 31, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131547', 'test5', '计算机应用技术', '2022', 'B', '微信小程序开发', '中级', 62, 23, 32, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131546', 'test4', '计算机应用技术', '2021', 'C', 'web前端开发', '中级', 64, 89, 33, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131548', 'test6', '计算机软件技术', '2023', 'B', '微信小程序开发', '中级', 88, 99, 34, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131549', 'test7', '计算机软件技术', '2024', 'B', '微信小程序开发', '中级', 3, 23, 35, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131551', 'test9', '计算机软件技术', '2022', 'C', '微信小程序开发', '高级', 78, 58, 36, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131550', 'test8', '计算机软件技术', '2020', 'C', '微信小程序开发', '中级', 23, 42, 37, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131552', 'test10', '计算机网络技术', '2020', 'C', '微信小程序开发', '高级', 79, 59, 38, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131553', 'test11', '物联网技术', '2020', 'C', 'web前端开发', '高级', 80, 60, 39, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131555', 'test13', '物联网技术', '2020', 'D', 'web前端开发', '高级', 82, 62, 40, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131554', 'test12', '物联网技术', '2020', 'D', 'web前端开发', '高级', 81, 61, 41, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1902131556', 'test14', '物联网技术', '2020', 'D', 'web前端开发', '高级', 99, 63, 42, '2022-01-12 22:08:04');
-INSERT INTO `score` VALUES ('1234567891', 'test', '计算机网络技术', '2020', 'C', 'web前端开发', '中级', 12, 12, 48, '2022-03-19 22:22:45');
+INSERT INTO `score` VALUES ('1902131545', 'test3', '技术应用技术', '2020', 'A', 'web前端开发', '中级', 55, 55, 53, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131547', 'test5', '技术应用技术', '2022', 'B', '微信小程序开发', '中级', 62, 23, 54, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131550', 'test8', '计算机软件技术', '2020', 'C', '微信小程序开发', '中级', 23, 45, 55, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131548', 'test6', '计算机软件技术', '2023', 'B', '微信小程序开发', '中级', 88, 99, 56, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131551', 'test9', '计算机软件技术', '2022', 'C', '微信小程序开发', '高级', 78, 58, 57, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131552', 'test10', '计算机网络技术', '2020', 'C', '微信小程序开发', '高级', 79, 59, 58, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131554', 'test12', '物联网技术', '2020', 'D', 'web前端开发', '高级', 81, 61, 59, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131555', 'test13', '物联网技术', '2020', 'D', 'web前端开发', '高级', 82, 62, 60, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131556', 'test14', '物联网技术', '2020', 'D', 'web前端开发', '高级', 99, 63, 61, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131549', 'test7', '计算机软件技术', '2024', 'B', '微信小程序开发', '中级', 3, 23, 62, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131553', 'test11', '物联网技术', '2020', 'C', 'web前端开发', '高级', 80, 60, 63, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131546', 'test4', '技术应用技术', '2021', 'A', 'web前端开发', '中级', 64, 89, 51, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131544', 'test2', '技术应用技术', '2018', 'A', 'web前端开发', '初级', 45, 65, 52, '2022-03-21 15:23:13');
+INSERT INTO `score` VALUES ('1902131543', 'test1', '技术应用技术', '2019', 'A', 'web前端开发', '初级', 65, 87, 50, '2022-03-21 15:23:13');
 
 -- ----------------------------
 -- Table structure for student
@@ -223,24 +225,21 @@ CREATE TABLE `student`  (
   `s_id` int(11) NOT NULL AUTO_INCREMENT,
   `registration_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`s_id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 95 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
 INSERT INTO `student` VALUES ('张三看五', '1906030243', 'upload/18UtX_b9LYOKZKeTHE4Mn5mZ.jpeg', '4451222200005154712', '计算机应用技术', '2019', 'B', 'web前端开发', '初级', 0, 1, '2022-01-12 18:06:29');
-INSERT INTO `student` VALUES ('李四沙', '1906030242', 'upload/j8YGkmgedNwEXeVDXG9oPko1.jpeg', '4451222313131313231', '计算机应用技术', '2019', 'B', 'web前端开发', '中级', 0, 2, '2022-01-12 17:32:24');
-INSERT INTO `student` VALUES ('等鱼', '123', 'upload\\a9XBnW5i_87DyE2F03_itOvD.jpeg', '2', '计算机应用技术', '2021', 'C', 'web前端开发', '初级', 0, 64, '2021-12-17 22:06:33');
-INSERT INTO `student` VALUES ('鱼', '124', ' ', '3', '计算机应用技术', '2020', 'b', 'web前端开发', '初级', 0, 65, '2022-01-12 22:06:36');
-INSERT INTO `student` VALUES ('等鱼', '125', ' ', '4', '计算机应用技术', '2021', 'b', 'web前端开发', '初级', 0, 66, '2022-01-12 22:06:40');
-INSERT INTO `student` VALUES ('qq', '126', ' ', '5', '计算机应用技术', '2022', 'b', 'web前端开发', '初级', 0, 67, '2022-01-13 22:06:45');
-INSERT INTO `student` VALUES ('等鱼', '127', ' ', '6', '计算机网络技术', '2020', 'C', 'web前端开发', '中级', 0, 68, '2022-01-08 22:06:48');
-INSERT INTO `student` VALUES ('等鱼', '128', ' ', '7', '计算机应用技术', '2024', 'b', 'web前端开发', '初级', 0, 69, '2022-01-14 22:06:51');
-INSERT INTO `student` VALUES ('等鱼', '19060302444', 'upload\\4icirJTgdkFcdgdsIoxge6iL.png', '445122212151212415212', '计算机应用技术', '2021', 'B', 'web前端开发', '中级', 2, 88, '2022-03-18 19:28:44');
-INSERT INTO `student` VALUES ('111', '1111111111', '', '4451222000051547199', '计算机软件技术', '2022', 'A', '微信小程序开发', '高级', 0, 87, '2022-03-18 09:29:08');
-INSERT INTO `student` VALUES ('等鱼', '131', ' ', '10', '计算机应用技术', '2021', 'C', 'web前端开发', '中级', 0, 72, '2022-01-14 22:07:00');
-INSERT INTO `student` VALUES ('等鱼', '132', ' ', '11', '计算机应用技术', '2021', 'C', '微信小程序开发', '高级', 0, 73, '2022-01-06 22:07:03');
-INSERT INTO `student` VALUES ('等鱼', '1906030242', 'upload\\bizA0xedMzzdUG1-hS4PiFOn.ico', '445122212151212415212', '计算机应用技术', '2021', 'B', 'web前端开发', '中级', 2, 89, '2022-03-18 21:50:46');
+INSERT INTO `student` VALUES ('test4', '1902131546', ' ', ' ', '技术应用技术', '2021', 'A', 'web前端开发', '中级', 0, 98, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('test5', '1902131547', ' ', ' ', '技术应用技术', '2022', 'B', '微信小程序开发', '中级', 0, 99, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('test6', '1902131548', ' ', ' ', '计算机软件技术', '2023', 'B', '微信小程序开发', '中级', 0, 100, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('test7', '1902131549', ' ', ' ', '计算机软件技术', '2024', 'B', '微信小程序开发', '中级', 0, 101, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('test8', '1902131550', ' ', ' ', '计算机软件技术', '2020', 'C', '微信小程序开发', '中级', 0, 102, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('test9', '1902131551', ' ', ' ', '计算机软件技术', '2022', 'C', '微信小程序开发', '高级', 0, 103, '2022-03-21 15:21:11');
+INSERT INTO `student` VALUES ('等鱼', '1906030242', 'upload\\DgAEZh9nNmGstyfwu_xBTI8S.jpeg', '445122212151212415212', '计算机应用技术', '2021', 'B', 'web前端开发', '中级', 2, 89, '2022-03-18 21:50:46');
+INSERT INTO `student` VALUES ('test14', '1902131556', ' ', ' ', '物联网技术', '2020', 'D', 'web前端开发', '高级', 0, 121, '2022-03-21 15:32:36');
+INSERT INTO `student` VALUES ('test11', '1902131553', ' ', ' ', '物联网技术', '2020', 'C', 'web前端开发', '高级', 0, 122, '2022-03-21 15:32:36');
 
 -- ----------------------------
 -- Table structure for student_account
@@ -260,7 +259,7 @@ CREATE TABLE `student_account`  (
 -- ----------------------------
 -- Records of student_account
 -- ----------------------------
-INSERT INTO `student_account` VALUES ('1906030242', '等鱼', '445122212151212415212', '计算机应用技术', '2021', 'B', '123456');
+INSERT INTO `student_account` VALUES ('1906030242', '等鱼', '445122212151212415212', '计算机应用技术', '2021', 'B', '12345678');
 INSERT INTO `student_account` VALUES ('1902131556', 'test14', ' ', '物联网技术', '2020', 'D', '123456');
 INSERT INTO `student_account` VALUES ('1902131555', 'test13', ' ', '物联网技术', '2020', 'D', '123456');
 INSERT INTO `student_account` VALUES ('1902131554', 'test12', ' ', '物联网技术', '2020', 'D', '123456');
@@ -269,11 +268,11 @@ INSERT INTO `student_account` VALUES ('1902131552', 'test10', ' ', '计算机网
 INSERT INTO `student_account` VALUES ('1902131551', 'test9', ' ', '计算机软件技术', '2022', 'C', '123456');
 INSERT INTO `student_account` VALUES ('1902131550', 'test8', ' ', '计算机软件技术', '2020', 'C', '123456');
 INSERT INTO `student_account` VALUES ('1902131549', 'test7', ' ', '计算机软件技术', '2024', 'B', '123456');
-INSERT INTO `student_account` VALUES ('1902131548', 'test6', ' ', '计算机软件技术', '2023', 'B', '123456');
 INSERT INTO `student_account` VALUES ('1902131547', 'test5', ' ', '技术应用技术', '2022', 'B', '123456');
 INSERT INTO `student_account` VALUES ('1902131546', 'test4', ' ', '技术应用技术', '2021', 'A', '123456');
 INSERT INTO `student_account` VALUES ('1902131545', 'test3', ' ', '技术应用技术', '2020', 'A', '123456');
 INSERT INTO `student_account` VALUES ('1902131544', 'test2', ' ', '技术应用技术', '2018', 'A', '123456');
+INSERT INTO `student_account` VALUES ('1234567890', '啊啊', NULL, NULL, NULL, NULL, '123456');
 INSERT INTO `student_account` VALUES ('1902131543', 'test1', ' ', '技术应用技术', '2019', 'A', '123456');
 
 -- ----------------------------

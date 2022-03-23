@@ -25,4 +25,5 @@ module.exports = class Fund extends Model2 {
 		let row = await this.deleteData(order_id, "order_id");
 		return this.returnData(row.affectedRows === 1);
 	}
+	
 }
